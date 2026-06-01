@@ -1,0 +1,12 @@
+{
+  "name": "coding-discipline",
+  "owner": { "name": "duosanjin" },
+  "metadata": { "description": "Project-agnostic Claude Code coding-discipline guardrails." },
+  "plugins": [
+    {
+      "name": "coding-discipline",
+      "source": "./",
+      "description": "Project-agnostic coding guardrails as hooks: typecheck-on-edit, comment-discipline, pre-push secret scan, reuse-first component reminder."
+    }
+  ]
+}
