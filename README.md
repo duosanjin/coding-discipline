@@ -16,23 +16,19 @@ All hooks are silent when clean. Scripts are bash + `python3` only -- no extra d
 
 ## Install on another machine
 
-**Option A -- local folder (no marketplace):**
+**Option 1 -- via marketplace (recommended, supports updates):**
 ```bash
-claude --plugin-dir /path/to/coding-discipline
-```
-
-**Option B -- marketplace (git repo, updatable):**
-```bash
-# one-time: point Claude at the repo hosting this plugin
-/plugin marketplace add <git-url-or-owner/repo>
+/plugin marketplace add duosanjin/coding-discipline
 /plugin install coding-discipline
 ```
 
-**Option C -- skills-dir auto-load (your own synced machines):**
-Copy this folder into `~/.claude/skills/coding-discipline/` (it has a `.claude-plugin/plugin.json`,
-so it auto-loads as `coding-discipline@skills-dir` with no install step). Handy if `~/.claude` is synced.
+**Option 2 -- clone and load locally (no marketplace):**
+```bash
+git clone https://github.com/duosanjin/coding-discipline
+claude --plugin-dir ./coding-discipline
+```
 
-After installing, `/reload-plugins` (or restart) and confirm hooks fire.
+After installing, run `/reload-plugins` (or restart Claude Code) and confirm the hooks fire.
 
 ## Notes / tuning
 
