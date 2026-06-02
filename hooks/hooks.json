@@ -20,6 +20,16 @@
             "timeout": 10
           }
         ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/hooks/comment-discipline.sh",
+            "timeout": 10
+          }
+        ]
       }
     ],
     "PostToolUse": [
@@ -30,11 +40,6 @@
             "type": "command",
             "command": "\"${CLAUDE_PLUGIN_ROOT}\"/hooks/typecheck-on-edit.sh",
             "timeout": 60
-          },
-          {
-            "type": "command",
-            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/hooks/comment-discipline.sh",
-            "timeout": 10
           }
         ]
       }
