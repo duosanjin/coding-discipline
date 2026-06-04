@@ -21,9 +21,14 @@ cd "$root" || exit 0
 # High-signal, low-false-positive shapes. No single quotes inside so the whole thing single-quotes cleanly.
 secret_re='sk-[A-Za-z0-9_-]{20,}|AKIA[0-9A-Z]{16}|gh[pousr]_[A-Za-z0-9]{36,}|(postgres(ql)?|mysql|mongodb(\+srv)?)://[^:@/[:space:]]+:[^@/[:space:]]+@|(SECRET|TOKEN|PASSWORD|PRIVATE_KEY|API_KEY|APIKEY|ACCESS_KEY)[[:space:]]*[=:][[:space:]]*[^[:space:]]{20,}|-----BEGIN [A-Z ]*PRIVATE KEY-----'
 
-# Exclude placeholder/template files (their dummy values are not real secrets).
-hits=$(git ls-files -z 2>/dev/null | xargs -0 grep -lE "$secret_re" 2>/dev/null \
-         | grep -vE '\.(example|sample|template|dist)$|(^|/)\.env\.(example|sample|template)$')
+# Env-var references / placeholders are not embedded literals: ${VAR}, $(cmd), process.env.X, import.meta.env, os.getenv(), <YOUR_TOKEN>.
+ref_re='\$\{|\$\(|process\.env\.|import\.meta\.env|os\.environ|os\.getenv\(|System\.getenv\(|<[A-Za-z0-9_.-]+>'
+
+# Scan tracked files line-by-line; drop env-ref lines and placeholder/template files, then reduce to the offending filenames.
+hits=$(git ls-files -z 2>/dev/null | xargs -0 grep -nHE "$secret_re" 2>/dev/null \
+         | grep -vE '\.(example|sample|template|dist):|(^|/)\.env\.(example|sample|template):' \
+         | grep -vE "$ref_re" \
+         | cut -d: -f1 | sort -u)
 
 [ -z "$hits" ] && exit 0
 {
