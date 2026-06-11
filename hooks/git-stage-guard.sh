@@ -3,8 +3,8 @@
 in=$(cat)
 cmd=$(/usr/bin/jq -r '.tool_input.command // empty' <<<"$in")
 
-# blanket 'git add' — -A / --all / -u / bare '.' / '*' grabs other sessions' files
-if echo "$cmd" | grep -Eq '\bgit\b.*\badd\b.*(-A\b|--all\b|-u\b| \.( |$)|\*)'; then
+# blanket staging: 'git' must directly precede the subcommand (modulo flags) so prose mentioning both can't fire
+if echo "$cmd" | grep -Eq '\bgit([[:space:]]+-[^[:space:]]+([[:space:]]+[^-[:space:]][^[:space:]]*)?)*[[:space:]]+add\b.*(-A\b|--all\b|-u\b| \.( |$)|\*)'; then
   echo "Blocked: blanket 'git add' stages other parallel sessions' files. Stage the explicit paths you changed this session." >&2
   exit 2
 fi
